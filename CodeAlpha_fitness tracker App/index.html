@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A premium, glassmorphic Fitness Tracker application to log daily steps, workouts, water intake, calories, and visualize progress.">
+    <title>AuraFit - Premium Fitness Tracker</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-logo">
+                    <i class="fa-solid fa-bolt-lightning brand-icon"></i>
+                </div>
+                <h1 class="brand-name">Aura<span>Fit</span></h1>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="#" class="nav-link active" data-tab="dashboard" id="tab-dashboard-btn">
+                    <i class="fa-solid fa-chart-simple"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-link" data-tab="log-activity" id="tab-log-btn">
+                    <i class="fa-solid fa-circle-plus"></i>
+                    <span>Log Activity</span>
+                </a>
+                <a href="#" class="nav-link" data-tab="analytics" id="tab-analytics-btn">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="#" class="nav-link" data-tab="goals" id="tab-goals-btn">
+                    <i class="fa-solid fa-sliders"></i>
+                    <span>Goals & Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="avatar">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name" id="user-display-name">Active User</span>
+                        <span class="user-status"><span class="pulse-dot"></span>Online</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="top-bar">
+                <div class="greeting-section">
+                    <h2 id="greeting-title">Hello, Champion!</h2>
+                    <p class="subtitle" id="current-date-str">Friday, June 19, 2026</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary quick-log-btn" id="quick-water-btn">
+                        <i class="fa-solid fa-glass-water"></i> +250ml Water
+                    </button>
+                    <button class="btn btn-primary" id="open-log-modal-btn">
+                        <i class="fa-solid fa-plus"></i> Quick Log
+                    </button>
+                </div>
+            </header>
+
+            <!-- Tab Content: Dashboard -->
+            <section id="dashboard" class="tab-pane active">
+                <!-- Highlight summary widget -->
+                <div class="highlight-row">
+                    <div class="highlight-card steps-card">
+                        <div class="card-bg-gradient"></div>
+                        <div class="card-header">
+                            <div class="icon-wrapper">
+                                <i class="fa-solid fa-shoe-prints"></i>
+                            </div>
+                            <span class="card-title">Daily Steps</span>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="metric-value"><span id="metric-steps">0</span> <small>/ <span id="goal-steps-val">10,000</span></small></h3>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="steps-progress-bar" style="width: 0%"></div>
+                            </div>
+                            <span class="card-percentage" id="steps-percentage">0% of goal</span>
+                        </div>
+                    </div>
+
+                    <div class="highlight-card calories-card">
+                        <div class="card-bg-gradient"></div>
+                        <div class="card-header">
+                            <div class="icon-wrapper">
+                                <i class="fa-solid fa-fire-flame-curved"></i>
+                            </div>
+                            <span class="card-title">Calories Burned</span>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="metric-value"><span id="metric-calories-burned">0</span> <small>kcal</small></h3>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="calories-burned-progress-bar" style="width: 0%"></div>
+                            </div>
+                            <span class="card-percentage" id="calories-burned-percentage">0% of goal</span>
+                        </div>
+                    </div>
+
+                    <div class="highlight-card water-card">
+                        <div class="card-bg-gradient"></div>
+                        <div class="card-header">
+                            <div class="icon-wrapper">
+                                <i class="fa-solid fa-droplet"></i>
+                            </div>
+                            <span class="card-title">Water Intake</span>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="metric-value"><span id="metric-water">0</span> <small>/ <span id="goal-water-val">2,500</span> ml</small></h3>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="water-progress-bar" style="width: 0%"></div>
+                            </div>
+                            <span class="card-percentage" id="water-percentage">0% of goal</span>
+                        </div>
+                    </div>
+
+                    <div class="highlight-card active-card">
+                        <div class="card-bg-gradient"></div>
+                        <div class="card-header">
+                            <div class="icon-wrapper">
+                                <i class="fa-solid fa-clock"></i>
+                            </div>
+                            <span class="card-title">Active Time</span>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="metric-value"><span id="metric-active-time">0</span> <small>/ <span id="goal-active-val">60</span> mins</small></h3>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="active-time-progress-bar" style="width: 0%"></div>
+                            </div>
+                            <span class="card-percentage" id="active-time-percentage">0% of goal</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Secondary summary: Calorie Balance -->
+                <div class="dashboard-grid">
+                    <!-- Left: Calorie tracking details -->
+                    <div class="glass-panel calorie-balance-panel">
+                        <h3>Energy Balance</h3>
+                        <div class="balance-container">
+                            <div class="balance-stat">
+                                <span class="stat-label">Consumed</span>
+                                <span class="stat-value text-intake" id="balance-consumed">0 kcal</span>
+                            </div>
+                            <div class="balance-divider">
+                                <div class="balance-circle">
+                                    <span id="balance-net">0</span>
+                                    <small>Net kcal</small>
+                                </div>
+                            </div>
+                            <div class="balance-stat">
+                                <span class="stat-label">Burned</span>
+                                <span class="stat-value text-burn" id="balance-burned">0 kcal</span>
+                            </div>
+                        </div>
+                        <div class="balance-progress-row">
+                            <span>Daily Budget (Intake)</span>
+                            <span class="float-right" id="balance-budget-text">0 / 2,500 kcal</span>
+                        </div>
+                        <div class="progress-bar-container balance-progress-outer">
+                            <div class="progress-bar balance-progress" id="budget-progress-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Quick logs and increment widgets -->
+                    <div class="glass-panel quick-log-panel">
+                        <h3>Quick Log Controls</h3>
+                        <div class="quick-controls-grid">
+                            <div class="quick-control-card">
+                                <span class="control-title"><i class="fa-solid fa-shoe-prints"></i> Quick Steps</span>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-outline-step" onclick="adjustSteps(500)">+500</button>
+                                    <button class="btn btn-sm btn-outline-step" onclick="adjustSteps(1000)">+1,000</button>
+                                    <button class="btn btn-sm btn-outline-step" onclick="adjustSteps(5000)">+5,000</button>
+                                </div>
+                            </div>
+                            <div class="quick-control-card">
+                                <span class="control-title"><i class="fa-solid fa-droplet"></i> Quick Water</span>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-outline-water" onclick="adjustWater(250)">+250ml</button>
+                                    <button class="btn btn-sm btn-outline-water" onclick="adjustWater(500)">+500ml</button>
+                                    <button class="btn btn-sm btn-outline-water" onclick="adjustWater(750)">+750ml</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activities Section -->
+                <div class="glass-panel recent-logs-panel">
+                    <div class="panel-header">
+                        <h3>Today's Activities & Logs</h3>
+                        <button class="btn btn-text" onclick="switchTab('log-activity')">View All Logs <i class="fa-solid fa-arrow-right"></i></button>
+                    </div>
+                    <div class="logs-list-wrapper">
+                        <ul class="activities-list" id="dashboard-recent-list">
+                            <li class="empty-state">No activities logged for today yet. Make a start!</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab Content: Log Activity -->
+            <section id="log-activity" class="tab-pane">
+                <div class="logging-grid">
+                    <!-- Column 1: Log Workouts -->
+                    <div class="glass-panel form-panel">
+                        <div class="form-panel-header">
+                            <div class="header-icon workout-accent"><i class="fa-solid fa-dumbbell"></i></div>
+                            <h3>Log Workout</h3>
+                        </div>
+                        <form id="workout-form" class="log-form">
+                            <div class="form-group">
+                                <label for="workout-type">Exercise Type</label>
+                                <select id="workout-type" required>
+                                    <option value="" disabled selected>Select exercise...</option>
+                                    <option value="Running">🏃 Running</option>
+                                    <option value="Walking">🚶 Walking</option>
+                                    <option value="Cycling">🚴 Cycling</option>
+                                    <option value="Strength Training">🏋️ Strength Training</option>
+                                    <option value="Cardio HIIT">⚡ Cardio / HIIT</option>
+                                    <option value="Yoga">🧘 Yoga</option>
+                                    <option value="Swimming">🏊 Swimming</option>
+                                    <option value="Sports">⚽ Sports</option>
+                                    <option value="Other">✨ Other</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="workout-duration">Duration (minutes)</label>
+                                    <input type="number" id="workout-duration" min="1" placeholder="e.g. 30" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="workout-calories">Calories Burned (kcal)</label>
+                                    <input type="number" id="workout-calories" min="1" placeholder="Estimated kcal" required>
+                                    <span class="input-helper" id="calories-calc-helper">Enter duration to auto-calculate</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="workout-intensity">Intensity Level</label>
+                                <div class="radio-toggle-group">
+                                    <input type="radio" id="int-low" name="workout-intensity" value="low" checked>
+                                    <label for="int-low">Low</label>
+                                    
+                                    <input type="radio" id="int-med" name="workout-intensity" value="medium">
+                                    <label for="int-med">Medium</label>
+                                    
+                                    <input type="radio" id="int-high" name="workout-intensity" value="high">
+                                    <label for="int-high">High</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="workout-notes">Notes / Details</label>
+                                <input type="text" id="workout-notes" placeholder="How did it feel? (optional)">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <i class="fa-solid fa-check"></i> Save Workout Log
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Column 2: Log Calorie Intake -->
+                    <div class="glass-panel form-panel">
+                        <div class="form-panel-header">
+                            <div class="header-icon calorie-accent"><i class="fa-solid fa-utensils"></i></div>
+                            <h3>Log Meal / Calorie Intake</h3>
+                        </div>
+                        <form id="food-form" class="log-form">
+                            <div class="form-group">
+                                <label for="food-name">Food / Drink Item</label>
+                                <input type="text" id="food-name" placeholder="e.g. Oatmeal with banana" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="food-calories">Calories Consumed (kcal)</label>
+                                    <input type="number" id="food-calories" min="1" placeholder="e.g. 350" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="meal-type">Meal Category</label>
+                                    <select id="meal-type" required>
+                                        <option value="Breakfast">Breakfast</option>
+                                        <option value="Lunch">Lunch</option>
+                                        <option value="Dinner">Dinner</option>
+                                        <option value="Snack">Snack</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block bg-gradient-intake">
+                                <i class="fa-solid fa-plus"></i> Add Food Log
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Column 3: Log Steps & Sleep -->
+                    <div class="glass-panel form-panel">
+                        <div class="form-panel-header">
+                            <div class="header-icon lifestyle-accent"><i class="fa-solid fa-bed"></i></div>
+                            <h3>Log Steps & Sleep</h3>
+                        </div>
+                        <form id="lifestyle-form" class="log-form">
+                            <div class="form-group">
+                                <label for="manual-steps">Add Extra Steps</label>
+                                <div class="input-with-button">
+                                    <input type="number" id="manual-steps" min="1" placeholder="Add steps manually">
+                                    <button type="button" class="btn btn-secondary" id="manual-steps-add-btn">Add</button>
+                                </div>
+                            </div>
+                            <hr class="form-separator">
+                            <div class="form-group">
+                                <label for="sleep-hours">Sleep Duration (hours)</label>
+                                <input type="number" id="sleep-hours" step="0.1" min="0" max="24" placeholder="e.g. 7.5">
+                            </div>
+                            <div class="form-group">
+                                <label for="sleep-quality">Sleep Quality</label>
+                                <select id="sleep-quality">
+                                    <option value="" disabled selected>Rate quality...</option>
+                                    <option value="Excellent">⭐ Excellent</option>
+                                    <option value="Good">👍 Good</option>
+                                    <option value="Fair">😐 Fair</option>
+                                    <option value="Poor">🥱 Poor</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block bg-gradient-lifestyle">
+                                <i class="fa-solid fa-save"></i> Save Lifestyle Logs
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Comprehensive History Log List -->
+                <div class="glass-panel full-history-panel">
+                    <div class="panel-header">
+                        <h3>Detailed Log History (Today)</h3>
+                        <button class="btn btn-secondary btn-sm" id="clear-today-logs-btn">
+                            <i class="fa-solid fa-trash-can"></i> Clear All Today's Logs
+                        </button>
+                    </div>
+                    <div class="history-table-container">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Category</th>
+                                    <th>Description</th>
+                                    <th>Value</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="history-log-tbody">
+                                <!-- Filled programmatically -->
+                                <tr>
+                                    <td colspan="5" class="empty-state">No entries registered for today.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab Content: Analytics -->
+            <section id="analytics" class="tab-pane">
+                <div class="analytics-filter-row">
+                    <h3>Weekly & Monthly Fitness Metrics</h3>
+                    <div class="button-toggle-group">
+                        <button class="btn btn-sm btn-toggle active" id="analytics-7days-btn">Last 7 Days</button>
+                        <button class="btn btn-sm btn-toggle" id="analytics-30days-btn">Last 30 Days</button>
+                    </div>
+                </div>
+
+                <div class="analytics-grid">
+                    <!-- Chart 1: Steps & Distance -->
+                    <div class="glass-panel chart-panel">
+                        <div class="chart-header">
+                            <h4>Steps Trend</h4>
+                            <span class="chart-summary-stat" id="chart-steps-avg">Avg: -- steps/day</span>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="stepsTrendChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 2: Calorie intake vs Burned -->
+                    <div class="glass-panel chart-panel">
+                        <div class="chart-header">
+                            <h4>Calorie Balance Trend</h4>
+                            <span class="chart-summary-stat" id="chart-calorie-summary">Avg Net: -- kcal</span>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="calorieComparisonChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 3: Workout distribution -->
+                    <div class="glass-panel chart-panel">
+                        <div class="chart-header">
+                            <h4>Workout Formats</h4>
+                            <span class="chart-summary-stat" id="chart-workouts-count">Total: -- sessions</span>
+                        </div>
+                        <div class="chart-wrapper doughnut-wrapper">
+                            <canvas id="workoutDistributionChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 4: Sleep duration tracking -->
+                    <div class="glass-panel chart-panel">
+                        <div class="chart-header">
+                            <h4>Sleep Trend</h4>
+                            <span class="chart-summary-stat" id="chart-sleep-avg">Avg: -- hrs</span>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="sleepTrendChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab Content: Goals & Settings -->
+            <section id="goals" class="tab-pane">
+                <div class="settings-grid">
+                    <!-- Form 1: Modify Targets -->
+                    <div class="glass-panel form-panel">
+                        <div class="form-panel-header">
+                            <div class="header-icon settings-accent"><i class="fa-solid fa-bullseye"></i></div>
+                            <h3>Daily Goals Adjustments</h3>
+                        </div>
+                        <form id="goals-form" class="log-form">
+                            <div class="form-group">
+                                <label for="set-steps-goal">Steps Goal</label>
+                                <input type="number" id="set-steps-goal" min="1" max="100000" placeholder="e.g. 10000" required>
+                                <span class="input-helper">Typical recommendation is 10,000 steps</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="set-calories-burn-goal">Calories Burn Goal (workouts, active energy) (kcal)</label>
+                                <input type="number" id="set-calories-burn-goal" min="1" max="10000" placeholder="e.g. 500" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="set-water-goal">Water Goal (ml)</label>
+                                <input type="number" id="set-water-goal" min="1" max="10000" placeholder="e.g. 2500" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="set-active-goal">Active Time Goal (minutes)</label>
+                                <input type="number" id="set-active-goal" min="1" max="1440" placeholder="e.g. 60" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="set-calories-intake-goal">Daily Calorie Intake Budget (kcal)</label>
+                                <input type="number" id="set-calories-intake-goal" min="1" max="10000" placeholder="e.g. 2500" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <i class="fa-solid fa-floppy-disk"></i> Update Goals
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Form 2: User Settings -->
+                    <div class="glass-panel form-panel">
+                        <div class="form-panel-header">
+                            <div class="header-icon settings-accent"><i class="fa-solid fa-user-gear"></i></div>
+                            <h3>User Settings</h3>
+                        </div>
+                        <form id="profile-form" class="log-form">
+                            <div class="form-group">
+                                <label for="profile-name">Display Name</label>
+                                <input type="text" id="profile-name" placeholder="Your Name" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="profile-weight">Weight (kg)</label>
+                                    <input type="number" id="profile-weight" step="0.1" min="1" max="300" placeholder="e.g. 70">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profile-height">Height (cm)</label>
+                                    <input type="number" id="profile-height" step="1" min="50" max="250" placeholder="e.g. 175">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-secondary btn-block">
+                                <i class="fa-solid fa-user-check"></i> Update Profile Settings
+                            </button>
+                        </form>
+
+                        <hr class="form-separator">
+
+                        <div class="dev-settings">
+                            <h4>App Administration</h4>
+                            <p class="subtitle" style="margin-bottom: 12px;">Reset stored database or seed test metrics to review the dashboards immediately.</p>
+                            <div class="btn-grid-2">
+                                <button class="btn btn-outline btn-sm" id="seed-data-btn">
+                                    <i class="fa-solid fa-database"></i> Seed Dummy Data
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm" id="reset-app-btn">
+                                    <i class="fa-solid fa-triangle-exclamation"></i> Clear All Storage
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Quick Log Modal Overlay -->
+    <div class="modal-backdrop" id="quick-log-modal">
+        <div class="modal-card glass-panel">
+            <div class="modal-header">
+                <h3>Quick Logging</h3>
+                <button class="modal-close-btn" id="close-modal-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-quick-grid">
+                    <button class="modal-quick-action" onclick="triggerQuickForm('steps')">
+                        <i class="fa-solid fa-shoe-prints" style="color: #6366f1;"></i>
+                        <span>Steps Log</span>
+                    </button>
+                    <button class="modal-quick-action" onclick="triggerQuickForm('workout')">
+                        <i class="fa-solid fa-dumbbell" style="color: #f43f5e;"></i>
+                        <span>Workout Log</span>
+                    </button>
+                    <button class="modal-quick-action" onclick="triggerQuickForm('water')">
+                        <i class="fa-solid fa-droplet" style="color: #06b6d4;"></i>
+                        <span>Water Log</span>
+                    </button>
+                    <button class="modal-quick-action" onclick="triggerQuickForm('food')">
+                        <i class="fa-solid fa-utensils" style="color: #10b981;"></i>
+                        <span>Food Log</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Canvas Confetti & ChartJS Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- App Logic Script -->
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "aurafit-fitness-tracker",
+  "version": "1.0.0",
+  "description": "A premium, glassmorphic Fitness Tracker application to log daily steps, workouts, water intake, calories, and visualize progress.",
+  "scripts": {
+    "dev": "npx -y http-server -p 3000 -o"
+  },
+  "keywords": [
+    "fitness",
+    "tracker",
+    "dashboard",
+    "glassmorphism"
+  ],
+  "author": "AuraFit",
+  "license": "ISC"
+}
