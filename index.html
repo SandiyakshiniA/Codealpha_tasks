@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A premium, interactive Flashcard Quiz App to study, customize, and manage your custom learning decks with ease.">
+  <title>CardSpark — Flashcard Quiz App</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-area">
+        <div class="logo-icon">
+          <i data-lucide="sparkles"></i>
+        </div>
+        <h1 class="logo-text">Card<span>Spark</span></h1>
+      </div>
+      
+      <!-- Mode Navigation Switcher -->
+      <div class="nav-tabs" role="tablist">
+        <button id="tab-quiz" class="tab-btn active" role="tab" aria-selected="true" aria-controls="quiz-view">
+          <i data-lucide="play-circle"></i>
+          <span>Quiz Mode</span>
+        </button>
+        <button id="tab-manage" class="tab-btn" role="tab" aria-selected="false" aria-controls="manage-view">
+          <i data-lucide="layers"></i>
+          <span>Manage Deck</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- VIEW 1: QUIZ VIEW -->
+      <section id="quiz-view" class="view-panel" role="tabpanel" aria-labelledby="tab-quiz">
+        <!-- Progress Indicator -->
+        <div class="quiz-progress-container">
+          <div class="progress-details">
+            <span id="quiz-card-index">Card 0 of 0</span>
+            <span id="quiz-percent">0% Completed</span>
+          </div>
+          <div class="progress-bar-track">
+            <div id="quiz-progress-bar" class="progress-bar-fill" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- Card Deck Wrapper (Handles sliding transition/shakes) -->
+        <div class="card-deck-wrapper">
+          <!-- The Flip Card Container -->
+          <div id="flashcard-container" class="flashcard-container">
+            <div id="flashcard" class="flashcard">
+              
+              <!-- Front Side of Card -->
+              <div class="card-face card-front">
+                <div class="card-header-badge">
+                  <span id="card-front-tag" class="category-badge">HTML</span>
+                </div>
+                <div class="card-body">
+                  <p id="card-front-question" class="card-text">Loading question...</p>
+                </div>
+                <div class="card-footer">
+                  <button id="btn-show-answer" class="btn-reveal">
+                    <span>Show Answer</span>
+                    <i data-lucide="eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Back Side of Card -->
+              <div class="card-face card-back">
+                <div class="card-header-badge">
+                  <span id="card-back-tag" class="category-badge">HTML</span>
+                  <span class="back-label-badge">Answer</span>
+                </div>
+                <div class="card-body">
+                  <p id="card-back-answer" class="card-text">Loading answer...</p>
+                </div>
+                <div class="card-footer">
+                  <button id="btn-show-question" class="btn-reveal btn-secondary">
+                    <i data-lucide="eye-off"></i>
+                    <span>Show Question</span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Quiz Navigation Controls -->
+        <div class="quiz-controls">
+          <button id="btn-prev" class="btn-nav" aria-label="Previous card">
+            <i data-lucide="chevron-left"></i>
+            <span>Previous</span>
+          </button>
+          
+          <button id="btn-keyboard-hint" class="btn-hint" aria-label="Keyboard shortcuts info">
+            <i data-lucide="keyboard"></i>
+            <span class="tooltip">Use Arrow Keys & Spacebar</span>
+          </button>
+
+          <button id="btn-next" class="btn-nav" aria-label="Next card">
+            <span>Next</span>
+            <i data-lucide="chevron-right"></i>
+          </button>
+        </div>
+
+        <!-- Keyboard Shortcut Helper Panel (Subtle inline text) -->
+        <div class="keyboard-helper">
+          <p>💡 Tip: Use <kbd>←</kbd> / <kbd>→</kbd> arrows to navigate, and <kbd>Spacebar</kbd> to flip.</p>
+        </div>
+      </section>
+
+      <!-- VIEW 2: MANAGE VIEW -->
+      <section id="manage-view" class="view-panel hidden" role="tabpanel" aria-labelledby="tab-manage">
+        <div class="manage-header">
+          <div class="manage-title-area">
+            <h2>Deck Customization</h2>
+            <p id="deck-stats-text">Total Cards: 0</p>
+          </div>
+          <button id="btn-open-add-modal" class="btn-primary">
+            <i data-lucide="plus"></i>
+            <span>Add Flashcard</span>
+          </button>
+        </div>
+
+        <!-- Scrollable Cards Grid -->
+        <div id="cards-grid" class="cards-grid">
+          <!-- Dynamic cards list populated by JS -->
+        </div>
+
+        <!-- Empty State UI -->
+        <div id="empty-state" class="empty-state hidden">
+          <div class="empty-icon-wrap">
+            <i data-lucide="inbox"></i>
+          </div>
+          <h3>Your deck is empty</h3>
+          <p>Start learning by adding your first customized flashcard to the deck.</p>
+          <button id="btn-empty-add" class="btn-primary btn-glow">
+            <i data-lucide="plus"></i>
+            <span>Create Card Now</span>
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>&copy; 2026 CardSpark. Designed for visual excellence & study flow.</p>
+    </footer>
+  </div>
+
+  <!-- MODAL: ADD/EDIT CARD FORM -->
+  <div id="card-modal" class="modal-overlay hidden" aria-hidden="true" role="dialog" aria-labelledby="modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-title">Add New Flashcard</h3>
+        <button id="btn-close-modal" class="btn-close-icon" aria-label="Close modal">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <form id="card-form" class="modal-form">
+        <!-- Hidden input to track if editing an existing card -->
+        <input type="hidden" id="form-card-id" value="">
+        
+        <!-- Category Field -->
+        <div class="form-group">
+          <label for="form-category">Category / Tag</label>
+          <input type="text" id="form-category" placeholder="e.g. JavaScript, CSS, History" maxlength="30" required>
+        </div>
+
+        <!-- Question Field -->
+        <div class="form-group">
+          <label for="form-question">Question (Front side)</label>
+          <textarea id="form-question" rows="3" placeholder="Enter the flashcard question..." required></textarea>
+        </div>
+
+        <!-- Answer Field -->
+        <div class="form-group">
+          <label for="form-answer">Answer (Back side)</label>
+          <textarea id="form-answer" rows="4" placeholder="Enter the detailed answer..." required></textarea>
+        </div>
+
+        <!-- Modal Actions -->
+        <div class="modal-footer">
+          <button type="button" id="btn-cancel-modal" class="btn-secondary">Cancel</button>
+          <button type="submit" id="btn-submit-modal" class="btn-primary">
+            <span>Save Flashcard</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- JavaScript Entrypoint -->
+  <script src="app.js"></script>
+</body>
+</html>
